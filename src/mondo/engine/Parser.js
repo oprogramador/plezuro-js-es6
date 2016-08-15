@@ -20,10 +20,10 @@ export default class Parser {
   [readFromFile]() {
     const reader = new LineByLineReader(this.filename);
     let line = null;
-    while (line) {
-      this.lines.push(line.toString());
+    do {
       line = reader.next();
-    }
+      this.lines.push(line.toString());
+    } while (line);
   }
 
   [eventuallyChangeTokenType]() {
