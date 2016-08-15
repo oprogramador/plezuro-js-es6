@@ -7,6 +7,9 @@
     "parserOptions": {
         "sourceType": "module"
     },
+    "plugins": [
+        "sorting"
+    ],
     "rules": {
         "accessor-pairs": "error",
         "array-bracket-spacing": "error",
@@ -19,7 +22,7 @@
         "brace-style": "error",
         "callback-return": "error",
         "camelcase": "error",
-        "comma-dangle": "error",
+        "comma-dangle": ["error", "only-multiline"],
         "comma-spacing": "error",
         "comma-style": "error",
         "complexity": "error",
@@ -127,7 +130,6 @@
         "no-sync": "error",
         "no-tabs": "error",
         "no-template-curly-in-string": "error",
-        "no-ternary": "error",
         "no-throw-literal": "error",
         "no-trailing-spaces": "error",
         "no-undef-init": "error",

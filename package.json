@@ -28,6 +28,7 @@
     "n-readlines": "^0.2.5"
   },
   "devDependencies": {
-    "eslint": "^3.3.0"
+    "eslint": "^3.3.0",
+    "eslint-plugin-sorting": "^0.3.0"
   }
 }
