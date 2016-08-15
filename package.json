@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "compiler from Plezuro to JavaScript implemented in es6",
   "scripts": {
-    "create-project-symlink": "ln -s ../src node_modules/plezuro-js-es6",
+    "create-project-symlink": "ln -s ../ node_modules/plezuro-js-es6",
     "test": "echo \"Error: no test specified\" && exit 1",
     "compile": "node -r babel-register src/main.js",
     "postinstall": "npm run create-project-symlink"
@@ -22,6 +22,7 @@
     "babel-core": "^6.13.2",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-preset-es2015": "^6.13.2",
-    "babel-register": "^6.11.6"
+    "babel-register": "^6.11.6",
+    "lodash": "^4.15.0"
   }
 }
