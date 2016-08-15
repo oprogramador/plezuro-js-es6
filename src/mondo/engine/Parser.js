@@ -2,6 +2,7 @@ import Helper from 'plezuro-js-es6/src/mondo/engine/Helper.js';
 import LineByLineReader from 'n-readlines';
 import Tokenizer from 'plezuro-js-es6/src/mondo/engine/Tokenizer.js';
 import Validator from 'plezuro-js-es6/src/mondo/engine/Validator.js';
+import fs from 'fs';
 
 const readFromFile = Symbol();
 const eventuallyChangeTokenType = Symbol();
@@ -26,19 +27,39 @@ export default class Parser {
   }
 
   [eventuallyChangeTokenType]() {
-
+    this.tokenizer.hardReset();
+    const tokens = this.tokenizer.getTokens();
+    for (let i = 0; i < tokens.length; i++) {
+      tokens[i] = tokens[i].eventuallyChangeType(this.tokenizer);
+      this.tokenizer.hardNext();
+    }
   }
 
   [preConvert]() {
-
+    for (
+      let token = this.tokenizer.hardReset();
+      token !== null;
+      token = this.tokenizer.hardNext()
+    ) {
+      token.preConvert(this.tokenizer);
+    }
   }
 
   [convert]() {
-
+    for (
+      let token = this.tokenizer.hardReset();
+      token !== null;
+      token = this.tokenizer.hardNext()
+    ) {
+      token.convert(this.tokenizer);
+    }
   }
 
-  [writeToFile]() {
-
+  [writeToFile](tokens) {
+    const newTokens = tokens || this.tokenizer.getTokens();
+    const file = fs.createWriteStream(this.getOutputFilename());
+    newTokens.forEach((token) => file.write(token.getText()));
+    file.end();
   }
 
   getTokenizer() {
@@ -51,7 +72,7 @@ export default class Parser {
 
   process() {
     try {
-      this[readFromFile](this);
+      this[readFromFile]();
       this.tokenizer = new Tokenizer(this.filename, this.lines);
       this.tokenizer.process();
       this[eventuallyChangeTokenType]();
@@ -63,7 +84,7 @@ export default class Parser {
       this[convert]();
       this[writeToFile]();
     } catch (error) {
-      this[writeToFile]({error});
+      this[writeToFile](error.getTokens());
     }
   }
 }
