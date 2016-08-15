@@ -1,9 +1,7 @@
+import _ from 'lodash';
+
 export default class Engine {
-    constructor() {
-
-    }
-
-    process() {
-
-    }
+  process(args) {
+    _.times(args.length, (i) => i);
+  }
 }
