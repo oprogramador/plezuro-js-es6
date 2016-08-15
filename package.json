@@ -6,7 +6,8 @@
     "create-project-symlink": "ln -s ../ node_modules/plezuro-js-es6",
     "test": "echo \"Error: no test specified\" && exit 1",
     "compile": "node -r babel-register src/main.js",
-    "postinstall": "npm run create-project-symlink"
+    "postinstall": "npm run create-project-symlink",
+    "lint": "eslint src"
   },
   "repository": {
     "type": "git",
@@ -24,5 +25,8 @@
     "babel-preset-es2015": "^6.13.2",
     "babel-register": "^6.11.6",
     "lodash": "^4.15.0"
+  },
+  "devDependencies": {
+    "eslint": "^3.3.0"
   }
 }
