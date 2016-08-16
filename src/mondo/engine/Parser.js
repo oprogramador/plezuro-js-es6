@@ -4,6 +4,7 @@ import Tokenizer from 'plezuro-js-es6/src/mondo/engine/Tokenizer.js';
 import Validator from 'plezuro-js-es6/src/mondo/engine/Validator.js';
 import fs from 'fs';
 
+const LIST_START_INDEX = 0;
 const readFromFile = Symbol();
 const eventuallyChangeTokenType = Symbol();
 const preConvert = Symbol();
@@ -29,7 +30,7 @@ export default class Parser {
   [eventuallyChangeTokenType]() {
     this.tokenizer.hardReset();
     const tokens = this.tokenizer.getTokens();
-    for (let i = 0; i < tokens.length; i++) {
+    for (let i = LIST_START_INDEX; i < tokens.length; i++) {
       tokens[i] = tokens[i].eventuallyChangeType(this.tokenizer);
       this.tokenizer.hardNext();
     }

@@ -21,6 +21,7 @@ import Token from 'plezuro-js-es6/src/mondo/token/Token.js';
 import WhiteSpaceToken from 'plezuro-js-es6/src/mondo/token/WhiteSpaceToken.js';
 import path from 'path';
 
+const LIST_START_INDEX = 0;
 const MIN_TOKENS_NR = 1;
 const NEXT_INDEX_OFFSET = 1;
 
@@ -46,11 +47,11 @@ export default class Tokenizer {
 
   process(filename, lines) {
     Token.setStaticFilename(path.resolve(filename));
-    for (let i = 0; i < this.lines.length; i++) {
-      let index = 0;
+    for (let i = LIST_START_INDEX; i < this.lines.length; i++) {
+      let index = LIST_START_INDEX;
       while (index < lines[i].length) {
         const oldIndex = index;
-        for (let k = 0; k < this.tokenTypes.length; k++) {
+        for (let k = LIST_START_INDEX; k < this.tokenTypes.length; k++) {
           const tokenType = this.tokenTypes[k];
           const token = tokenType.setFilename(filename).find({
             index,
@@ -78,8 +79,8 @@ export default class Tokenizer {
         }
       }
       this.tokens.push(
-        new NewLineToken(i, lines[i].length).
-          setFilename(filename)
+        new NewLineToken(i, lines[i].length)
+          .setFilename(filename)
       );
     }
   }
