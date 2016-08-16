@@ -26,7 +26,9 @@ const MIN_TOKENS_NR = 1;
 const NEXT_INDEX_OFFSET = 1;
 
 export default class Tokenizer {
-  constructor() {
+  constructor(filename, lines) {
+    this.filename = filename;
+    this.lines = lines;
     this.tokenTypes = [
       new CommentToken(),
       new MultiLineCommentToken(),
@@ -45,18 +47,18 @@ export default class Tokenizer {
     this.tokenIndex = 0;
   }
 
-  process(filename, lines) {
-    Token.setStaticFilename(path.resolve(filename));
+  process() {
+    Token.setStaticFilename(path.resolve(this.filename));
     for (let i = LIST_START_INDEX; i < this.lines.length; i++) {
       let index = LIST_START_INDEX;
-      while (index < lines[i].length) {
+      while (index < this.lines[i].length) {
         const oldIndex = index;
         for (let k = LIST_START_INDEX; k < this.tokenTypes.length; k++) {
           const tokenType = this.tokenTypes[k];
-          const token = tokenType.setFilename(filename).find({
+          const token = tokenType.setFilename(this.filename).find({
             index,
             lineNr: i,
-            lines,
+            lines: this.lines,
             previousToken:
               this.tokens.length > NEXT_INDEX_OFFSET
               ? this.tokens[this.tokens.length - NEXT_INDEX_OFFSET]
@@ -70,17 +72,17 @@ export default class Tokenizer {
           }
         }
         if (oldIndex === index) {
-          throw InvalidTokenException.create(
-            NonExistentTokenException,
-            filename,
-            i,
-            index
-          );
+          throw InvalidTokenException.create({
+            aClass: NonExistentTokenException,
+            filename: this.filename,
+            lineNr: i,
+            position: index
+          });
         }
       }
       this.tokens.push(
-        new NewLineToken(i, lines[i].length)
-          .setFilename(filename)
+        new NewLineToken(i, this.lines[i].length)
+          .setFilename(this.filename)
       );
     }
   }

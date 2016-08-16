@@ -1,3 +1,5 @@
+let staticFilename = null;
+
 export default class Token {
   isPossibleAfterPrevious() {
     return true;
@@ -24,5 +26,23 @@ export default class Token {
 
   getOriginalText() {
     return '';
+  }
+
+  getFullFilename() {
+    return this.filename || staticFilename;
+  }
+
+  getFilename() {
+    return this.filename;
+  }
+
+  setFilename(value) {
+    this.filename = value;
+
+    return this;
+  }
+
+  static setStaticFilename(value) {
+    staticFilename = value;
   }
 }
