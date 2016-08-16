@@ -1,3 +1,5 @@
+import BracketStackException from
+  'plezuro-js-es6/src/mondo/invalidToken/BracketStackException.js';
 import InvalidTokenException from
   'plezuro-js-es6/src/mondo/invalidToken/InvalidTokenException.js';
 import OperatorAfterBracketCloseException from
@@ -27,12 +29,12 @@ export default class Validator {
       }
       if (token.isBiOperatorToken() && next.isBiOperatorToken()) {
         if (!token.isArithmetic() || !next.isAllowedAtBegin()) {
-          throw InvalidTokenException.create(
-            OperatorAfterOperatorException,
-            next.getFullFilename(),
-            next.getLineNr(),
-            next.getBegX()
-          );
+          throw InvalidTokenException.create({
+            aClass: OperatorAfterOperatorException,
+            filename: next.getFullFilename(),
+            lineNr: next.getLineNr(),
+            position: next.getBegX()
+          });
         }
       }
       token = next;
@@ -46,12 +48,12 @@ export default class Validator {
         return;
       }
       if (token.isEntity() && next.isEntity()) {
-        throw InvalidTokenException.create(
-          ValueAfterValueException,
-          next.getFullFilename(),
-          next.getLineNr(),
-          next.getBegX()
-        );
+        throw InvalidTokenException.create({
+          aClass: ValueAfterValueException,
+          filename: next.getFullFilename(),
+          lineNr: next.getLineNr(),
+          position: next.getBegX()
+        });
       }
       token = next;
     }
@@ -68,12 +70,12 @@ export default class Validator {
         next.isBiOperatorToken() &&
           !next.isAllowedAtBegin()
       ) {
-        throw InvalidTokenException.create(
-          OperatorAfterBracketOpenException,
-          next.getFullFilename(),
-          next.getLineNr(),
-          next.getBegX()
-        );
+        throw InvalidTokenException.create({
+          aClass: OperatorAfterBracketOpenException,
+          filename: next.getFullFilename(),
+          lineNr: next.getLineNr(),
+          position: next.getBegX()
+        });
       }
       token = next;
     }
@@ -90,12 +92,12 @@ export default class Validator {
         !token.isDelimiter() &&
         next.isClosingToken()
       ) {
-        throw InvalidTokenException.create(
-          OperatorBeforeBracketCloseException,
-          next.getFullFilename(),
-          next.getLineNr(),
-          next.getBegX()
-        );
+        throw InvalidTokenException.create({
+          aClass: OperatorBeforeBracketCloseException,
+          filename: next.getFullFilename(),
+          lineNr: next.getLineNr(),
+          position: next.getBegX()
+        });
       }
       token = next;
     }
@@ -108,19 +110,59 @@ export default class Validator {
         return;
       }
       if (token.isClosingToken() && next.isEntity()) {
-        throw InvalidTokenException.create(
-          OperatorAfterBracketCloseException,
-          next.getFullFilename(),
-          next.getLineNr(),
-          next.getBegX()
-        );
+        throw InvalidTokenException.create({
+          aClass: OperatorAfterBracketCloseException,
+          filename: next.getFullFilename(),
+          lineNr: next.getLineNr(),
+          position: next.getBegX()
+        });
       }
       token = next;
     }
   }
 
   [checkBracketStack]() {
-
+    const stack = [];
+    for (
+      let token = this.tokenizer.hardReset();
+      token !== null;
+      token = this.tokenizer.getNextNotBlank()
+    ) {
+      if (token.isOpeningToken()) {
+        stack.push(token);
+      } else if (token.isClosingToken()) {
+        try {
+          const pop = stack.pop();
+          if (token.getOpenClass() !== pop.getClass()) {
+            throw InvalidTokenException.create({
+              aClass: BracketStackException,
+              extraMessage: `unexpected ${token.getOriginalText()}`,
+              filename: token.getFullFilename(),
+              lineNr: token.getLineNr(),
+              position: token.getBegX(),
+            });
+          }
+        } catch (e) {
+          throw InvalidTokenException.create({
+            aClass: BracketStackException,
+            extraMessage: `empty bracket stack - unexpected ${token.getOriginalText()}`,
+            filename: token.getFullFilename(),
+            lineNr: token.getLineNr(),
+            position: token.getBegX(),
+          });
+        }
+      }
+    }
+    if (stack.length) {
+      const token = this.tokenizer.getPrevious();
+      throw InvalidTokenException.create({
+        aClass: BracketStackException,
+        extraMessage: 'not empty bracket stack at the end',
+        filename: token.getFullFilename(),
+        lineNr: token.getLineNr(),
+        position: token.getBegX(),
+      });
+    }
   }
 
   constructor(tokenizer) {
