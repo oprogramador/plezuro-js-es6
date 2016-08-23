@@ -1,3 +1,4 @@
+import AbstractTokenizer from 'plezuro-js-es6/src/mondo/token/AbstractTokenizer.js';
 import BracketToken from 'plezuro-js-es6/src/mondo/token/BracketToken.js';
 import ClassFieldToken from 'plezuro-js-es6/src/mondo/token/ClassFieldToken.js';
 import CommentToken from 'plezuro-js-es6/src/mondo/token/CommentToken.js';
@@ -25,8 +26,10 @@ const LIST_START_INDEX = 0;
 const MIN_TOKENS_NR = 1;
 const NEXT_INDEX_OFFSET = 1;
 
-export default class Tokenizer {
+export default class Tokenizer extends AbstractTokenizer {
   constructor(filename, lines) {
+    super();
+
     this.filename = filename;
     this.lines = lines;
     this.tokenTypes = [
