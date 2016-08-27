@@ -20,6 +20,7 @@ import SquareBracketOpenToken from 'plezuro-js-es6/src/mondo/token/SquareBracket
 import StringToken from 'plezuro-js-es6/src/mondo/token/StringToken';
 import SymbolToken from 'plezuro-js-es6/src/mondo/token/SymbolToken';
 import Token from 'plezuro-js-es6/src/mondo/token/Token';
+import TokenHelper from 'plezuro-js-es6/src/mondo/token/TokenHelper';
 import UniOperatorToken from 'plezuro-js-es6/src/mondo/token/UniOperatorToken';
 import WhiteSpaceToken from 'plezuro-js-es6/src/mondo/token/WhiteSpaceToken';
 
@@ -55,6 +56,7 @@ export default class TokenFactory {
 
   create(name) {
     return new this.tokenClasses[name]()
-    .setFactory(this);
+      .setFactory(this)
+      .setHelper(new TokenHelper());
   }
 }

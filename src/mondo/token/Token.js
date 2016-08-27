@@ -1,6 +1,3 @@
-import BracketToken from 'plezuro-js-es6/src/mondo/token/BracketToken.js';
-import FunctionEndToken from
-  'plezuro-js-es6/src/mondo/token/FunctionEndToken.js';
 import UnsupportedOperationException from
   'plezuro-js-es6/src/mondo/exception/UnsupportedOperationException.js';
 import _ from 'lodash';
@@ -86,9 +83,11 @@ export default class Token {
     tokenizer.resetToThis();
     if (tokenizer.getNext() === null) {
       tokenizer.resetToThis();
-      tokenizer.insertAfter(new FunctionEndToken().setText(
-        `})[typeof module !== 'undefined' ? 'exports' : 'call']
-        (typeof module !== 'undefined' ? module : null)`
+      tokenizer.insertAfter(
+        this.factory.create('FunctionEndToken')
+        .setText(
+          `})[typeof module !== 'undefined' ? 'exports' : 'call']
+          (typeof module !== 'undefined' ? module : null)`
         ));
       tokenizer.reset();
       tokenizer.insertBefore(
@@ -96,7 +95,7 @@ export default class Token {
           .setText('(function() {')
       );
       tokenizer.resetToThis();
-      BracketToken.matchFunctionEnd(tokenizer);
+      this.helper.getFunction('BracketToken.matchFunctionEnd')(tokenizer);
       tokenizer.finish();
     }
   }
@@ -127,6 +126,12 @@ export default class Token {
 
   setFactory(factory) {
     this.factory = factory;
+
+    return this;
+  }
+
+  setHelper(helper) {
+    this.helper = helper;
 
     return this;
   }
