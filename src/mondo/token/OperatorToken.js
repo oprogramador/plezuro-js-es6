@@ -1,23 +1,21 @@
-import BiOperatorToken from 'plezuro-js-es6/src/mondo/token/BiOperatorToken.js';
 import Token from 'plezuro-js-es6/src/mondo/token/Token.js';
-import UniOperatorToken from 'plezuro-js-es6/src/mondo/token/UniOperatorToken.js';
 import _ from 'lodash';
 
-const activeSubtypes = [
-  new BiOperatorToken(),
-  new UniOperatorToken(),
-];
-
-let possibleTokens = null;
-const init = () => {
-  possibleTokens = [];
-  activeSubtypes.forEach((token) => {
-    possibleTokens = possibleTokens.concat(token.getOnlyPossibleTokens());
-  });
-};
-init();
-
 export default class OperatorToken extends Token {
+  constructor(args) {
+    super(args);
+
+    this.activeSubtypes = [
+      this.factory.create('BiOperatorToken'),
+      this.factory.create('UniOperatorToken'),
+    ];
+
+    this.possibleTokens = [];
+    this.activeSubtypes.forEach((token) => {
+      this.possibleTokens = this.possibleTokens.concat(token.getOnlyPossibleTokens());
+    });
+  }
+
   isBlank() {
     return false;
   }
@@ -35,7 +33,7 @@ export default class OperatorToken extends Token {
   }
 
   getPossibleTokens() {
-    return possibleTokens;
+    return this.possibleTokens;
   }
 
   getOnlyPossibleTokens() {
@@ -59,7 +57,7 @@ export default class OperatorToken extends Token {
 
   getObjectOfSuitableSubclass(tokenText) {
     let result = null;
-    activeSubtypes.some((token) => {
+    this.activeSubtypes.some((token) => {
       if (_.includes(token.getOnlyPossibleTokens(), tokenText)) {
         result = _.clone(token);
 

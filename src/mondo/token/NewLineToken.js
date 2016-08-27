@@ -5,8 +5,7 @@ export default class NewLineToken extends Token {
     return true;
   }
 
-  constructor(lineNr, x) {
-    super();
+  setParams(lineNr, x) {
     this.lineNr = lineNr;
     this.begX = x;
     this.endX = x;

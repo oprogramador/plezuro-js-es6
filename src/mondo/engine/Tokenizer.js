@@ -1,7 +1,6 @@
 import AbstractTokenizer from 'plezuro-js-es6/src/mondo/token/AbstractTokenizer.js';
 import InvalidTokenException from
   'plezuro-js-es6/src/mondo/invalidToken/InvalidTokenException.js';
-import NewLineToken from 'plezuro-js-es6/src/mondo/token/NewLineToken.js';
 import NonExistentTokenException from
   'plezuro-js-es6/src/mondo/invalidToken/NonExistentTokenException.js';
 import Token from 'plezuro-js-es6/src/mondo/token/Token.js';
@@ -16,22 +15,22 @@ export default class Tokenizer extends AbstractTokenizer {
   constructor(filename, lines) {
     super();
 
-    const tokenFactory = new TokenFactory();
+    this.tokenFactory = new TokenFactory();
     this.filename = filename;
     this.lines = lines;
     this.tokenTypes = [
-      tokenFactory.create('CommentToken'),
-      tokenFactory.create('MultiLineCommentToken'),
-      tokenFactory.create('RegexToken'),
-      tokenFactory.create('BracketToken'),
-      tokenFactory.create('NumberToken'),
-      tokenFactory.create('DeclarationToken'),
-      tokenFactory.create('ClassFieldToken'),
-      tokenFactory.create('ObjectFieldToken'),
-      tokenFactory.create('WhiteSpaceToken'),
-      tokenFactory.create('OperatorToken'),
-      tokenFactory.create('SymbolToken'),
-      tokenFactory.create('StringToken'),
+      this.tokenFactory.create('CommentToken'),
+      this.tokenFactory.create('MultiLineCommentToken'),
+      this.tokenFactory.create('RegexToken'),
+      this.tokenFactory.create('BracketToken'),
+      this.tokenFactory.create('NumberToken'),
+      this.tokenFactory.create('DeclarationToken'),
+      this.tokenFactory.create('ClassFieldToken'),
+      this.tokenFactory.create('ObjectFieldToken'),
+      this.tokenFactory.create('WhiteSpaceToken'),
+      this.tokenFactory.create('OperatorToken'),
+      this.tokenFactory.create('SymbolToken'),
+      this.tokenFactory.create('StringToken'),
     ];
     this.hardTokenIndex = 0;
     this.tokenIndex = 0;
@@ -71,7 +70,8 @@ export default class Tokenizer extends AbstractTokenizer {
         }
       }
       this.tokens.push(
-        new NewLineToken(i, this.lines[i].length)
+        this.factory.create('NewLineToken')
+          .setParams(i, this.lines[i].length)
           .setFilename(this.filename)
       );
     }

@@ -7,6 +7,11 @@ let staticFilename = null;
 const CHAR_OFFSET = 1;
 
 export default class Token {
+  constructor(args) {
+    this.factory = args.factory;
+    this.helper = args.helper;
+  }
+
   isPossibleAfterPrevious() {
     return true;
   }

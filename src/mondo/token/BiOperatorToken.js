@@ -1,4 +1,3 @@
-import BracketToken from 'plezuro-js-es6/src/mondo/token/BracketToken.js';
 import OperatorToken from 'plezuro-js-es6/src/mondo/token/OperatorToken.js';
 
 const INITIAL_ORDER = -1;
@@ -109,8 +108,9 @@ const init = () => {
 init();
 
 export default class BiOperatorToken extends OperatorToken {
-  constructor() {
-    super();
+  constructor(args) {
+    super(args);
+
     this.order = INITIAL_ORDER;
   }
 
@@ -192,11 +192,11 @@ export default class BiOperatorToken extends OperatorToken {
           token.getOrder() <= myOrder
         )
       ) {
-        tokenizer.insertBefore(BracketToken.getOperatorBracketClose());
+        tokenizer.insertBefore(this.helper.getFunction('BracketToken.getOperatorBracketClose')());
 
         return;
       }
     }
-    tokenizer.insertBefore(BracketToken.getOperatorBracketClose());
+    tokenizer.insertBefore(this.helper.getFunction('BracketToken.getOperatorBracketClose')());
   }
 }

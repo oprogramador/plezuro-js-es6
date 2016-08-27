@@ -55,8 +55,9 @@ export default class TokenFactory {
   }
 
   create(name) {
-    return new this.tokenClasses[name]()
-      .setFactory(this)
-      .setHelper(new TokenHelper());
+    return new this.tokenClasses[name]({
+      factory: this,
+      helper: new TokenHelper(),
+    });
   }
 }

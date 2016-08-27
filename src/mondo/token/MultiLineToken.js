@@ -10,8 +10,9 @@ export default class MultiLineToken extends Token {
     return '';
   }
 
-  constructor() {
-    super();
+  constructor(args) {
+    super(args);
+
     this.endLineNr = null;
   }
 
