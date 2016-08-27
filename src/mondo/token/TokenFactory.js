@@ -60,4 +60,8 @@ export default class TokenFactory {
       helper: new TokenHelper(),
     });
   }
+
+  is(token, name) {
+    return token instanceof this.tokenClasses[name];
+  }
 }

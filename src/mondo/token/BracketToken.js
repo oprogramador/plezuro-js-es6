@@ -1,85 +1,85 @@
-import BracketCloseToken from 'plezuro-js-es6/src/mondo/token/BracketCloseToken.js';
-import BracketOpenToken from 'plezuro-js-es6/src/mondo/token/BracketOpenToken.js';
-import FunctionEndToken from 'plezuro-js-es6/src/mondo/token/FunctionEndToken.js';
-import FunctionToken from 'plezuro-js-es6/src/mondo/token/FunctionToken.js';
-import IndexOperatorToken from 'plezuro-js-es6/src/mondo/token/IndexOperatorToken.js';
-import NewLineToken from 'plezuro-js-es6/src/mondo/token/NewLineToken.js';
-import OperatorToken from 'plezuro-js-es6/src/mondo/token/OperatorToken.js';
-import SquareBracketCloseToken from 'plezuro-js-es6/src/mondo/token/SquareBracketCloseToken.js';
-import SquareBracketOpenToken from 'plezuro-js-es6/src/mondo/token/SquareBracketOpenToken.js';
-import SymbolToken from 'plezuro-js-es6/src/mondo/token/SymbolToken.js';
 import Token from 'plezuro-js-es6/src/mondo/token/Token.js';
 
 const INITIAL_COUNTER = 1;
 const NULL_COUNTER = 1;
 
-const matchSet = (tokenizer) => {
-  tokenizer.getMatchingCloseBracket();
-  tokenizer.insertBefore(new BracketCloseToken().setText(']'));
-
-  return 'new Set([';
-};
-
-const matchDictionary = () => 'new Dictionary(';
-
-const matchAssociativeArray = () => 'new AssocArray(';
-
-const matchFunctionBegin = () => '(function () {';
-
-const matchFunctionEnd = (tokenizer) => {
-  let counter = INITIAL_COUNTER;
-  for (
-    let token = tokenizer.getPreviousNotBlank();
-    token !== null;
-    token = tokenizer.getPreviousNotBlank()
-  ) {
-    if (token.getText() === OperatorToken.getOperatorSemicolon().getText()) {
-      token.setText('; return ');
-      break;
-    }
-    if (token instanceof FunctionToken) counter--;
-    if (token instanceof FunctionEndToken) counter++;
-    if (counter === NULL_COUNTER) {
-      tokenizer.insertAfter(new SymbolToken().setText('return '));
-      break;
-    }
-  }
-  for (
-    let token = tokenizer.getNext();
-    token.isBlank();
-    token = tokenizer.getNext()
-  ) {
-    if (token instanceof NewLineToken) token.setText(' ');
-  }
-
-  return '})';
-};
-
 const classMap = {
-  '#(': BracketOpenToken,
-  '$(': BracketOpenToken,
-  '%(': BracketOpenToken,
-  '(': BracketOpenToken,
-  ')': BracketCloseToken,
-  '[': SquareBracketOpenToken,
-  ']': SquareBracketCloseToken,
-  '{': FunctionToken,
-  '}': FunctionEndToken,
-};
-
-const functionMap = {
-  '#(': matchDictionary,
-  '$(': matchSet,
-  '%(': matchAssociativeArray,
-  '(': () => '(',
-  ')': () => ')',
-  '[': () => '[',
-  ']': () => ']',
-  '{': matchFunctionBegin,
-  '}': matchFunctionEnd,
+  '#(': 'BracketOpenToken',
+  '$(': 'BracketOpenToken',
+  '%(': 'BracketOpenToken',
+  '(': 'BracketOpenToken',
+  ')': 'BracketCloseToken',
+  '[': 'SquareBracketOpenToken',
+  ']': 'SquareBracketCloseToken',
+  '{': 'FunctionToken',
+  '}': 'FunctionEndToken',
 };
 
 export default class BracketToken extends Token {
+  constructor(args) {
+    super(args);
+
+    this.functionMap = {
+      '#(': () => 'new Dictionary(',
+      '$(': this.matchSet,
+      '%(': () => 'new AssocArray(',
+      '(': () => '(',
+      ')': () => ')',
+      '[': () => '[',
+      ']': () => ']',
+      '{': () => '(function () {',
+      '}': this.matchFunctionEnd,
+    };
+  }
+
+  matchSet(tokenizer) {
+    tokenizer.getMatchingCloseBracket();
+    tokenizer.insertBefore(this.factory.create('BracketCloseToken').setText(']'));
+
+    return 'new Set([';
+  }
+
+  matchFunctionEnd(tokenizer) {
+    let counter = INITIAL_COUNTER;
+    for (
+      let token = tokenizer.getPreviousNotBlank();
+      token !== null;
+      token = tokenizer.getPreviousNotBlank()
+    ) {
+      if (token.getText() ===
+        this.helper.getFunction('OperatorToken.getOperatorSemicolon')()
+          .getText()
+      ) {
+        token.setText('; return ');
+        break;
+      }
+      if (this.factory.is(token, 'FunctionToken')) {
+        counter--;
+      }
+      if (this.factory.is(token, 'FunctionEndToken')) {
+        counter++;
+      }
+      if (counter === NULL_COUNTER) {
+        tokenizer.insertAfter(
+          this.factory.create('SymbolToken')
+            .setText('return ')
+        );
+        break;
+      }
+    }
+    for (
+      let token = tokenizer.getNext();
+      token.isBlank();
+      token = tokenizer.getNext()
+    ) {
+      if (this.factory.is(token, 'NewLineToken')) {
+        token.setText(' ');
+      }
+    }
+
+    return '})';
+  }
+
   setRole(token) {
     this.role = token;
 
@@ -92,14 +92,6 @@ export default class BracketToken extends Token {
 
   isEntity() {
     return false;
-  }
-
-  static getOperatorBracketOpen() {
-    return new BracketOpenToken().setText('(');
-  }
-
-  static getOperatorBracketClose() {
-    return new BracketCloseToken().setText(')');
   }
 
   getPossibleTokens() {
@@ -117,7 +109,7 @@ export default class BracketToken extends Token {
   }
 
   doConvert(tokenizer) {
-    const func = functionMap[this.originalText];
+    const func = this.functionMap[this.originalText];
     if (typeof func === 'function') {
       this.text = func.call(tokenizer);
     }
@@ -130,12 +122,11 @@ export default class BracketToken extends Token {
       previous !== null &&
       previous.isEntity()
     ) {
-      this.setRole(new IndexOperatorToken());
+      this.setRole(this.factory.create('IndexOperatorToken'));
     }
     if (classMap[this.originalText]) {
-      const Class = classMap[this.originalText];
-
-      return new Class().copyAll(this);
+      return this.factory.create(classMap[this.originalText])
+        .copyAll(this);
     }
 
     return this;

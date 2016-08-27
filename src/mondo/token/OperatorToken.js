@@ -24,14 +24,6 @@ export default class OperatorToken extends Token {
     return false;
   }
 
-  static getOperatorDot() {
-    return new OperatorToken().setText('.');
-  }
-
-  static getOperatorSemicolon() {
-    return new OperatorToken().setText(';');
-  }
-
   getPossibleTokens() {
     return this.possibleTokens;
   }
