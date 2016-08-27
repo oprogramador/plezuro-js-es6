@@ -1,25 +1,11 @@
 import AbstractTokenizer from 'plezuro-js-es6/src/mondo/token/AbstractTokenizer.js';
-import BracketToken from 'plezuro-js-es6/src/mondo/token/BracketToken.js';
-import ClassFieldToken from 'plezuro-js-es6/src/mondo/token/ClassFieldToken.js';
-import CommentToken from 'plezuro-js-es6/src/mondo/token/CommentToken.js';
-import DeclarationToken from
-  'plezuro-js-es6/src/mondo/token/DeclarationToken.js';
 import InvalidTokenException from
   'plezuro-js-es6/src/mondo/invalidToken/InvalidTokenException.js';
-import MultiLineCommentToken from
-  'plezuro-js-es6/src/mondo/token/MultiLineCommentToken.js';
 import NewLineToken from 'plezuro-js-es6/src/mondo/token/NewLineToken.js';
 import NonExistentTokenException from
   'plezuro-js-es6/src/mondo/invalidToken/NonExistentTokenException.js';
-import NumberToken from 'plezuro-js-es6/src/mondo/token/NumberToken.js';
-import ObjectFieldToken from
-  'plezuro-js-es6/src/mondo/token/ObjectFieldToken.js';
-import OperatorToken from 'plezuro-js-es6/src/mondo/token/OperatorToken.js';
-import RegexToken from 'plezuro-js-es6/src/mondo/token/RegexToken.js';
-import StringToken from 'plezuro-js-es6/src/mondo/token/StringToken.js';
-import SymbolToken from 'plezuro-js-es6/src/mondo/token/SymbolToken.js';
 import Token from 'plezuro-js-es6/src/mondo/token/Token.js';
-import WhiteSpaceToken from 'plezuro-js-es6/src/mondo/token/WhiteSpaceToken.js';
+import TokenFactory from 'plezuro-js-es6/src/mondo/token/TokenFactory.js';
 import path from 'path';
 
 const LIST_START_INDEX = 0;
@@ -30,21 +16,22 @@ export default class Tokenizer extends AbstractTokenizer {
   constructor(filename, lines) {
     super();
 
+    const tokenFactory = new TokenFactory();
     this.filename = filename;
     this.lines = lines;
     this.tokenTypes = [
-      new CommentToken(),
-      new MultiLineCommentToken(),
-      new RegexToken(),
-      new BracketToken(),
-      new NumberToken(),
-      new DeclarationToken(),
-      new ClassFieldToken(),
-      new ObjectFieldToken(),
-      new WhiteSpaceToken(),
-      new OperatorToken(),
-      new SymbolToken(),
-      new StringToken(),
+      tokenFactory.create('CommentToken'),
+      tokenFactory.create('MultiLineCommentToken'),
+      tokenFactory.create('RegexToken'),
+      tokenFactory.create('BracketToken'),
+      tokenFactory.create('NumberToken'),
+      tokenFactory.create('DeclarationToken'),
+      tokenFactory.create('ClassFieldToken'),
+      tokenFactory.create('ObjectFieldToken'),
+      tokenFactory.create('WhiteSpaceToken'),
+      tokenFactory.create('OperatorToken'),
+      tokenFactory.create('SymbolToken'),
+      tokenFactory.create('StringToken'),
     ];
     this.hardTokenIndex = 0;
     this.tokenIndex = 0;

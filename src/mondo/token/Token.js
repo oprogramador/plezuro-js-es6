@@ -1,7 +1,6 @@
 import BracketToken from 'plezuro-js-es6/src/mondo/token/BracketToken.js';
 import FunctionEndToken from
   'plezuro-js-es6/src/mondo/token/FunctionEndToken.js';
-import FunctionToken from 'plezuro-js-es6/src/mondo/token/FunctionToken.js';
 import UnsupportedOperationException from
   'plezuro-js-es6/src/mondo/exception/UnsupportedOperationException.js';
 import _ from 'lodash';
@@ -92,7 +91,10 @@ export default class Token {
         (typeof module !== 'undefined' ? module : null)`
         ));
       tokenizer.reset();
-      tokenizer.insertBefore(new FunctionToken().setText('(function() {'));
+      tokenizer.insertBefore(
+        this.factory.create('FunctionToken')
+          .setText('(function() {')
+      );
       tokenizer.resetToThis();
       BracketToken.matchFunctionEnd(tokenizer);
       tokenizer.finish();
@@ -121,6 +123,12 @@ export default class Token {
 
   getDirName() {
     return path.dirname(this.filename);
+  }
+
+  setFactory(factory) {
+    this.factory = factory;
+
+    return this;
   }
 
   setFilename(value) {
