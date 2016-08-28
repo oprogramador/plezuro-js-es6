@@ -32,6 +32,7 @@ export default class Tokenizer extends AbstractTokenizer {
       this.tokenFactory.create('SymbolToken'),
       this.tokenFactory.create('StringToken'),
     ];
+    this.tokens = [];
     this.hardTokenIndex = 0;
     this.tokenIndex = 0;
   }
