@@ -12,6 +12,10 @@ export default class Token {
     this.helper = args.helper;
   }
 
+  getRegex() {
+    return new RegExp(this.getRegexString());
+  }
+
   isPossibleAfterPrevious() {
     return true;
   }
@@ -57,13 +61,15 @@ export default class Token {
   findFromRegex(lines, lineNr, index) {
     const line = lines[lineNr];
     const match = this.getRegex().exec(line.substr(index));
-    const result = this.getObjectOfSuitableSubclass(match[0])
-      .setBegX(match.index)
-      .setEndX(match.index + match[0].length - CHAR_OFFSET)
-      .setOriginalText(match[0])
-      .setLineNr(lineNr);
+    if (match) {
+      return this.getObjectOfSuitableSubclass(match[0])
+        .setBegX(match.index)
+        .setEndX(match.index + match[0].length - CHAR_OFFSET)
+        .setOriginalText(match[0])
+        .setLineNr(lineNr);
+    }
 
-    return result;
+    return null;
   }
 
   getObjectOfSuitableSubclass() {
@@ -203,7 +209,7 @@ export default class Token {
     return false;
   }
 
-  getRegex() {
+  getRegexString() {
     throw new UnsupportedOperationException();
   }
 

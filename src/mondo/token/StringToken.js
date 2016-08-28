@@ -10,7 +10,7 @@ export default class StringToken extends Token {
     return true;
   }
 
-  getRegex() {
+  getRegexString() {
     return "('')|('.*?([^\\\\]|(\\\\\\\\))')|(\"\")|(\".*?([^\\\\]|(\\\\\\\\))\")";
   }
 

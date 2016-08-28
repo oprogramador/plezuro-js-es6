@@ -5,7 +5,7 @@ export default class MultiLineCommentToken extends MultiLineToken {
     return true;
   }
 
-  getRegex() {
+  getRegexString() {
     return '\\/\\*.*';
   }
 

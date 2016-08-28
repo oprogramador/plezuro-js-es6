@@ -5,7 +5,7 @@ export default class WhiteSpaceToken extends Token {
     return true;
   }
 
-  getRegex() {
+  getRegexString() {
     return '[ \\\t]+';
   }
 }

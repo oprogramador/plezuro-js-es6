@@ -7,7 +7,7 @@ export default class CommentToken extends Token {
     return true;
   }
 
-  getRegex() {
+  getRegexString() {
     return '\\/\\/.*';
   }
 

@@ -9,7 +9,7 @@ export default class ClassFieldToken extends Token {
     return true;
   }
 
-  getRegex() {
+  getRegexString() {
     return '[A-Za-z_]+[A-Za-z_0-9]*::[A-Za-z_]+[A-Za-z_0-9]*';
   }
 

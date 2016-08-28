@@ -11,7 +11,7 @@ export default class ObjectFieldToken extends Token {
     return true;
   }
 
-  getRegex() {
+  getRegexString() {
     return '@[A-Za-z_]+[A-Za-z_0-9]*';
   }
 

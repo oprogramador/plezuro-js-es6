@@ -12,7 +12,7 @@ export default class RegexToken extends Token {
     return true;
   }
 
-  getRegex() {
+  getRegexString() {
     return "r(('([^']|(''))*')|(\"([^\"]|(\"\"))*\"))";
   }
 
