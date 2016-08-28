@@ -23,6 +23,9 @@ import Token from 'plezuro-js-es6/src/mondo/token/Token';
 import TokenHelper from 'plezuro-js-es6/src/mondo/token/TokenHelper';
 import UniOperatorToken from 'plezuro-js-es6/src/mondo/token/UniOperatorToken';
 import WhiteSpaceToken from 'plezuro-js-es6/src/mondo/token/WhiteSpaceToken';
+import objectHash from 'object-hash';
+
+const objects = {};
 
 export default class TokenFactory {
   constructor() {
@@ -59,6 +62,13 @@ export default class TokenFactory {
       factory: this,
       helper: new TokenHelper(),
     });
+  }
+
+  createFromHash(name, hashValue) {
+    const hash = objectHash({ hashValue, name });
+    objects[hash] = objects[hash] || this.create(name);
+
+    return objects[hash];
   }
 
   is(token, name) {
