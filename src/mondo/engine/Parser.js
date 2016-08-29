@@ -23,10 +23,9 @@ export default class Parser {
   [readFromFile]() {
     const reader = new LineByLineReader(this.filename);
     let line = null;
-    do {
-      line = reader.next();
+    while ((line = reader.next()) !== false) {
       this.lines.push(line.toString());
-    } while (line);
+    }
   }
 
   [eventuallyChangeTokenType]() {
