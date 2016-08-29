@@ -27,13 +27,17 @@ export default class Validator {
       if (next === null) {
         return;
       }
-      if (token.isBiOperatorToken() && next.isBiOperatorToken()) {
+      if (
+        this.tokenFactory.is(token, 'BiOperatorToken') &&
+        this.tokenFactory.is(next, 'BiOperatorToken')
+      ) {
         if (!token.isArithmetic() || !next.isAllowedAtBegin()) {
           throw InvalidTokenException.create({
             aClass: OperatorAfterOperatorException,
             filename: next.getFullFilename(),
             lineNr: next.getLineNr(),
-            position: next.getBegX()
+            position: next.getBegX(),
+            tokenFactory: this.tokenFactory,
           });
         }
       }
@@ -52,7 +56,8 @@ export default class Validator {
           aClass: ValueAfterValueException,
           filename: next.getFullFilename(),
           lineNr: next.getLineNr(),
-          position: next.getBegX()
+          position: next.getBegX(),
+          tokenFactory: this.tokenFactory,
         });
       }
       token = next;
@@ -74,7 +79,8 @@ export default class Validator {
           aClass: OperatorAfterBracketOpenException,
           filename: next.getFullFilename(),
           lineNr: next.getLineNr(),
-          position: next.getBegX()
+          position: next.getBegX(),
+          tokenFactory: this.tokenFactory,
         });
       }
       token = next;
@@ -96,7 +102,8 @@ export default class Validator {
           aClass: OperatorBeforeBracketCloseException,
           filename: next.getFullFilename(),
           lineNr: next.getLineNr(),
-          position: next.getBegX()
+          position: next.getBegX(),
+          tokenFactory: this.tokenFactory,
         });
       }
       token = next;
@@ -114,7 +121,8 @@ export default class Validator {
           aClass: OperatorAfterBracketCloseException,
           filename: next.getFullFilename(),
           lineNr: next.getLineNr(),
-          position: next.getBegX()
+          position: next.getBegX(),
+          tokenFactory: this.tokenFactory,
         });
       }
       token = next;
@@ -140,6 +148,7 @@ export default class Validator {
               filename: token.getFullFilename(),
               lineNr: token.getLineNr(),
               position: token.getBegX(),
+              tokenFactory: this.tokenFactory,
             });
           }
         } catch (e) {
@@ -149,6 +158,7 @@ export default class Validator {
             filename: token.getFullFilename(),
             lineNr: token.getLineNr(),
             position: token.getBegX(),
+            tokenFactory: this.tokenFactory,
           });
         }
       }
@@ -161,12 +171,14 @@ export default class Validator {
         filename: token.getFullFilename(),
         lineNr: token.getLineNr(),
         position: token.getBegX(),
+        tokenFactory: this.tokenFactory,
       });
     }
   }
 
-  constructor(tokenizer) {
+  constructor(tokenizer, tokenFactory) {
     this.tokenizer = tokenizer;
+    this.tokenFactory = tokenFactory;
   }
 
   process() {

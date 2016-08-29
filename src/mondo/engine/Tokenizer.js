@@ -4,7 +4,6 @@ import InvalidTokenException from
 import NonExistentTokenException from
   'plezuro-js-es6/src/mondo/invalidToken/NonExistentTokenException.js';
 import Token from 'plezuro-js-es6/src/mondo/token/Token.js';
-import TokenFactory from 'plezuro-js-es6/src/mondo/token/TokenFactory.js';
 import path from 'path';
 
 const LIST_START_INDEX = 0;
@@ -12,10 +11,10 @@ const MIN_TOKENS_NR = 1;
 const NEXT_INDEX_OFFSET = 1;
 
 export default class Tokenizer extends AbstractTokenizer {
-  constructor(filename, lines) {
+  constructor(tokenFactory, filename, lines) {
     super();
 
-    this.tokenFactory = new TokenFactory();
+    this.tokenFactory = tokenFactory;
     this.filename = filename;
     this.lines = lines;
     this.tokenTypes = [
@@ -66,7 +65,8 @@ export default class Tokenizer extends AbstractTokenizer {
             aClass: NonExistentTokenException,
             filename: this.filename,
             lineNr: i,
-            position: index
+            position: index,
+            tokenFactory: this.tokenFactory,
           });
         }
       }

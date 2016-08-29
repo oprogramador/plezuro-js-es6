@@ -3,3 +3,4 @@
 NERD_tree_*
 node_modules
 *.log
+*.plez.js

@@ -1,9 +1,8 @@
-import SymbolToken from 'plezuro-js-es6/src/mondo/token/SymbolToken.js';
-
 export default class InvalidTokenException {
   static create(args) {
     const AClass = args.aClass;
     const result = new AClass()
+      .setTokenFactory(args.tokenFactory)
       .setLineNr(args.lineNr)
       .setPosition(args.position)
       .setFilename(args.filename)
@@ -12,11 +11,17 @@ export default class InvalidTokenException {
     return result;
   }
 
+  setTokenFactory(tokenFactory) {
+    this.tokenFactory = tokenFactory;
+
+    return this;
+  }
+
   getTokens() {
     const className = this.constructor.name;
 
     return [
-      new SymbolToken()
+      this.tokenFactory.create('SymbolToken')
         .setText(`throw InvalidTokenException.create(
           '${className}',
           '${this.filename}',

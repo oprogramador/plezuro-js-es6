@@ -1,5 +1,6 @@
 import Helper from 'plezuro-js-es6/src/mondo/engine/Helper.js';
 import LineByLineReader from 'n-readlines';
+import TokenFactory from 'plezuro-js-es6/src/mondo/token/TokenFactory.js';
 import Tokenizer from 'plezuro-js-es6/src/mondo/engine/Tokenizer.js';
 import Validator from 'plezuro-js-es6/src/mondo/engine/Validator.js';
 import fs from 'fs';
@@ -16,6 +17,7 @@ export default class Parser {
     this.lines = [];
     this.filename = filename;
     this.outFilename = outFilename;
+    this.tokenFactory = new TokenFactory();
   }
 
   [readFromFile]() {
@@ -74,10 +76,10 @@ export default class Parser {
   process() {
     try {
       this[readFromFile]();
-      this.tokenizer = new Tokenizer(this.filename, this.lines);
+      this.tokenizer = new Tokenizer(this.tokenFactory, this.filename, this.lines);
       this.tokenizer.process();
       this[eventuallyChangeTokenType]();
-      const validator = new Validator(this.tokenizer);
+      const validator = new Validator(this.tokenizer, this.tokenFactory);
       validator.process();
       const helper = new Helper(this.tokenizer);
       helper.process();
