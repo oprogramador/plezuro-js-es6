@@ -71,7 +71,7 @@ export default class Tokenizer extends AbstractTokenizer {
         }
       }
       this.tokens.push(
-        this.factory.create('NewLineToken')
+        this.tokenFactory.create('NewLineToken')
           .setParams(i, this.lines[i].length)
           .setFilename(this.filename)
       );
@@ -112,6 +112,23 @@ export default class Tokenizer extends AbstractTokenizer {
     this.tokenIndex = this.hardTokenIndex;
 
     return this.tokens[this.tokenIndex];
+  }
+
+  getCurrent() {
+    if (this.tokenIndex < this.tokens.length) {
+      return this.tokens[this.tokenIndex];
+    }
+
+    return null;
+  }
+
+  getNext() {
+    this.tokenIndex++;
+    if (this.tokenIndex < this.tokens.length) {
+      return this.tokens[this.tokenIndex];
+    }
+
+    return null;
   }
 
   getPrevious() {

@@ -45,7 +45,7 @@ export default class Token {
       if (
         result === null ||
         tokenText.length > result.getOriginalText().length &&
-        this.lines[lineNr].indexOf(tokenText, index) === index
+        lines[lineNr].indexOf(tokenText, index) === index
       ) {
         result = this.getObjectOfSuitableSubclass(tokenText)
           .setBegX(index)
@@ -78,6 +78,10 @@ export default class Token {
 
   getLineNr() {
     return this.lineNr;
+  }
+
+  getEndLineNr() {
+    return this.getLineNr();
   }
 
   setLineNr(value) {
@@ -217,5 +221,16 @@ export default class Token {
 
   getPossibleTokens() {
     throw new UnsupportedOperationException();
+  }
+
+  copyAll(token) {
+    this.setBegX(token.getBegX())
+      .setEndX(token.getEndX())
+      .setLineNr(token.getLineNr())
+      .setOriginalText(token.getOriginalText())
+      .setText(token.getText())
+      .setFilename(token.getFilename());
+
+    return this;
   }
 }

@@ -11,5 +11,7 @@ export default class NewLineToken extends Token {
     this.endX = x;
     this.originalText = '\n';
     this.text = '\n';
+
+    return this;
   }
 }
