@@ -82,6 +82,8 @@ export default class Token {
 
   setLineNr(value) {
     this.lineNr = value;
+
+    return this;
   }
 
   convert(tokenizer) {
