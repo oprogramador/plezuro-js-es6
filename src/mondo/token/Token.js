@@ -43,8 +43,10 @@ export default class Token {
     let result = null;
     this.getPossibleTokens().forEach((tokenText) => {
       if (
-        result === null ||
-        tokenText.length > result.getOriginalText().length &&
+        (
+          result === null ||
+          tokenText.length > result.getOriginalText().length
+        ) &&
         lines[lineNr].indexOf(tokenText, index) === index
       ) {
         result = this.getObjectOfSuitableSubclass(tokenText)
