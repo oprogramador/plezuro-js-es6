@@ -1,6 +1,6 @@
 {
   "name": "plezuro-js-es6",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "compiler from Plezuro to JavaScript implemented in es6",
   "scripts": {
     "create-project-symlink": "ln -s ../ node_modules/plezuro-js-es6",
@@ -13,7 +13,7 @@
     "type": "git",
     "url": "git+https://github.com/oprogramador/plezuro-js-es6.git"
   },
-  "author": "Piotr Sroczkowski",
+  "author": "oprogramador",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/oprogramador/plezuro-js-es6/issues"
